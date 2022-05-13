@@ -20,7 +20,7 @@ document.getElementById('addNoteBtn').addEventListener('click', function () {
     userNoteElem.value = '';
     addNoteInHTMLList();
 });
-
+/**Adding card notes dynamically */
 function addNoteInHTMLList() {
     let notes = localStorage.getItem('notes');
     let notesArrList = JSON.parse(notes);
