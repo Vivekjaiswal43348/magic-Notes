@@ -1,11 +1,42 @@
 console.log('Magic Notes Project');
 
 addNoteInHTMLList();
-document.getElementById('addNoteBtn').addEventListener('click', function () {
+/** regular and important note */
+let regularNoteElem = document.getElementById('regular');
+let imprtantNoteElem = document.getElementById('important');
+regularNoteElem.addEventListener('click', function(){
+    regularNoteElem.style.display='none';
+    important.style.display='inline';
+});
+imprtantNoteElem.addEventListener('click', function(){
+    regularNoteElem.style.display='inline';
+    important.style.display='none';
+});
+/** */
+let addBtnElem = document.getElementById('addNoteBtn');
+addBtnElem.addEventListener('click', function () {
     let userNoteElem = document.getElementById('noteDescription');
+    let noteTitleElem = document.getElementById('noteTitle');
+    let starImgs = document.getElementById('sub-container').getElementsByTagName('img');
+    console.log(starImgs);
+    if(userNoteElem.value && noteTitleElem.value){
+    let isRegular = true;
+    // taking current star imgs value and resting them to default value
+    Array.from(starImgs).forEach(function(element){
+        if(element.id === 'regular' && getComputedStyle(element).getPropertyValue('display') === 'inline'){
+            isRegular = true;
+        }else if(element.id === 'important' && getComputedStyle(element).getPropertyValue('display') === 'inline'){
+            isRegular = false;
+        }
+        if(element.id === 'regular'){
+            element.style.display = 'inline';
+        } else {
+            element.style.display = 'none';
+        }
+    })
     // checking for existing localstorage notes
     let notes = localStorage.getItem('notes');
-    let notesArrList
+    let notesArrList;
     if (!notes) {
         // if no notes
         notesArrList = [];
@@ -14,11 +45,25 @@ document.getElementById('addNoteBtn').addEventListener('click', function () {
         notesArrList = JSON.parse(notes);
     }
     // pushong new note to notesArrList object
-    notesArrList.push(userNoteElem.value);
+    notesArrList.push({
+        desc: userNoteElem.value,
+        title: noteTitleElem.value,
+        isRegular: isRegular
+    });
     // updating localStorage variable
     localStorage.setItem('notes', JSON.stringify(notesArrList));
     userNoteElem.value = '';
+    noteTitleElem.value = '';
     addNoteInHTMLList();
+} else{
+    if(!userNoteElem.value && !noteTitleElem.value){
+    alert('Add title and dsecrption fields properly');
+    } else if (!noteTitleElem.value){
+    alert('Enter title');
+    } else if (!userNoteElem.value){
+        alert('Enter description');
+        }
+}
 });
 /**Adding card notes dynamically */
 function addNoteInHTMLList() {
@@ -30,10 +75,14 @@ function addNoteInHTMLList() {
     } else {
         notesArrList.forEach(function (element, index, arrayList) {
             html += `
-                <div class="card mx-2 my-2 note-card" style="width: 18rem">
+                <div class="card mx-2 my-2 note-card" style="width: 18rem" 
+                title="${element.isRegular?'Regular Note':'Important Note'}">
+                <img src='./images/regular.png' width='16px/' style="display: ${element.isRegular ? 'inline' : 'none'}">
+                <img src='./images/important.png' width='16px/' style="display: ${element.isRegular ? 'none' : 'inline'}">
                     <div class="card-body">
-                        <h5 class="card-title">Note ${index + 1}</h5>
-                        <p class="card-text">${element}</p>
+                        <h6 class="card-title">Note ${index + 1}</h6>
+                        <span><b>${element.title}</b></span>
+                        <p class="card-text">${element.desc}</p>
                         <button class="btn btn-primary" id="${index + 1}" onclick="handleDeleteNote(this.id)">Delete</button>
                     </div>
                 </div>
@@ -95,9 +144,9 @@ seacrhInputElem.addEventListener('input', function(){
 Array.from(allNoteCrads).forEach(function(element){
     let pText = element.getElementsByTagName('p')[0].innerText;
     //
-    if(pText.includes(searchedText)){
+    if(pText.includes(searchedText)) {
         element.style.display = 'block';
-    } else{
+    } else {
         element.style.display = 'none';
     }
 });
@@ -131,10 +180,9 @@ Array.from(allNoteCrads).forEach(function(element){
 //     }
 // })
 
-
 /**
  * Firther features:
- * 1. Add title to each note
+ * 1. Add title to each note : done
  * 2. Mark note as important
  * 3. Seperate notes by user
  * 4. Sync and host to a web server
