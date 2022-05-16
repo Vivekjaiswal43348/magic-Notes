@@ -135,14 +135,15 @@ function handleDeleteNote(id) {
 /** search filter on the basis of input field */
 let seacrhInputElem = document.querySelector('#searchedItem');
 seacrhInputElem.addEventListener('input', function(){
+    // let searchedText = (seacrhInputElem.value).toLowerCase();
     let searchedText = seacrhInputElem.value;
+    console.log('searchedText:', searchedText);
     // getting all note cards
     let allNoteCrads = document.getElementsByClassName('note-card');
     // looping all note cards to filter matching cases
 Array.from(allNoteCrads).forEach(function(element){
     let pText = element.getElementsByTagName('p')[0].innerText;
-    //
-    if(pText.includes(searchedText)) {
+    if(pText.toLowerCase().includes(searchedText.toLowerCase())) {
         element.style.display = 'block';
     } else {
         element.style.display = 'none';
@@ -227,7 +228,7 @@ Array.from(li_list_Of_UL).forEach(function(element){
 /**
  * Firther features:
  * 1. Add title to each note : done
- * 2. Mark note as important
+ * 2. Mark note as important : done
  * 3. Seperate notes by user
  * 4. Sync and host to a web server
  */
