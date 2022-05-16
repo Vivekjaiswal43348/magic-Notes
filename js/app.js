@@ -18,7 +18,6 @@ addBtnElem.addEventListener('click', function () {
     let userNoteElem = document.getElementById('noteDescription');
     let noteTitleElem = document.getElementById('noteTitle');
     let starImgs = document.getElementById('sub-container').getElementsByTagName('img');
-    console.log(starImgs);
     if(userNoteElem.value && noteTitleElem.value){
     let isRegular = true;
     // taking current star imgs value and resting them to default value
@@ -80,7 +79,6 @@ function addNoteInHTMLList() {
                 <img src='./images/regular.png' width='16px/' style="display: ${element.isRegular ? 'inline' : 'none'}">
                 <img src='./images/important.png' width='16px/' style="display: ${element.isRegular ? 'none' : 'inline'}">
                     <div class="card-body">
-                        <h6 class="card-title">Note ${index + 1}</h6>
                         <span><b>${element.title}</b></span>
                         <p class="card-text">${element.desc}</p>
                         <button class="btn btn-primary" id="${index + 1}" onclick="handleDeleteNote(this.id)">Delete</button>
@@ -150,14 +148,60 @@ Array.from(allNoteCrads).forEach(function(element){
         element.style.display = 'none';
     }
 });
-
 });
+
+/** Adding filter event listener for regular and impotant type notes */
+let filterUlElem = document.getElementById('note-filter');
+let li_list_Of_UL = filterUlElem.getElementsByTagName('li');
+Array.from(li_list_Of_UL).forEach(function(element){
+    element.addEventListener('click', function(e){
+        let selectedOption = element.getAttribute('value');
+        let dataStored = JSON.parse(localStorage.getItem('notes'));
+        let dataToDisplay = [];
+        switch(selectedOption){
+            case 'regular':{
+                dataToDisplay = dataStored.filter(function(element){
+                    return element.isRegular;
+                });
+                break;
+            }
+            case 'important':{
+                dataToDisplay = dataStored.filter(function(element){
+                    return !element.isRegular;
+                });
+                break;
+            }
+            case 'all':{
+                dataToDisplay = dataStored;
+                break;
+            }
+            default:{
+                console.log('Case not matched');
+            }
+        }
+        let html = '';
+        dataToDisplay.forEach(function(element, index){
+            html += `
+                <div class="card mx-2 my-2 note-card" style="width: 18rem" 
+                title="${element.isRegular?'Regular Note':'Important Note'}">
+                <img src='./images/regular.png' width='16px/' style="display: ${element.isRegular ? 'inline' : 'none'}">
+                <img src='./images/important.png' width='16px/' style="display: ${element.isRegular ? 'none' : 'inline'}">
+                    <div class="card-body">
+                        <span><b>${element.title}</b></span>
+                        <p class="card-text">${element.desc}</p>
+                        <button class="btn btn-primary" id="${index + 1}" onclick="handleDeleteNote(this.id)">Delete</button>
+                    </div>
+                </div>
+    `;
+        });
+        document.getElementById('noteID').innerHTML = html;
+    });
+});
+
+
 /** Add notes on enter press in text area */ 
 // document.getElementById('noteDescription').addEventListener('keypress', function (e) {
 //     let userNoteElem = document.getElementById('noteDescription');
-//     console.log('userNoteElem value:', userNoteElem.value);
-//     console.log('userNoteElem new:', !userNoteElem.value);
-//     console.log('userNoteElem old:', userNoteElem.value !== '');
 //     if (e.key === 'Enter' && !userNoteElem.value && userNoteElem.value !== '') {
 //         // checking for existing localstorage notes
 //         let notes = localStorage.getItem('notes');
