@@ -1,4 +1,15 @@
 console.log('Magic Notes Project');
+console.log('Hosted URL: https://vivekjaiswal43348.github.io/magic-Notes/');
+/** this function is responsible to hide the Web site link in production */
+function showHideWebSiteLink(){
+    debugger;
+    if(location.href.includes('vivekjaiswal43348.github.io')){
+        let webLinkElement = document.getElementById('online-link');
+        webLinkElement.style.display = 'none';
+    }
+}
+showHideWebSiteLink();
+/**------------------------------------------------ */
 
 addNoteInHTMLList();
 /** regular and important note */
@@ -65,7 +76,7 @@ addBtnElem.addEventListener('click', function () {
 }
 });
 /**Adding card notes dynamically */
-function addNoteInHTMLList() {
+ function addNoteInHTMLList() {
     let notes = localStorage.getItem('notes');
     let notesArrList = JSON.parse(notes);
     let html = '';
